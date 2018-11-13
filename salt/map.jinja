@@ -1,0 +1,130 @@
+{% set base = {
+  'common': {
+    'user': {
+      'name': 'salt',
+    },
+    'group': {
+      'name': 'salt',
+    },
+    'directories': {
+      'cache':         '/var/cache/salt',
+      'configuration': '/etc/salt',
+      'log':           '/var/log/salt',
+      'persistence':   '/var/lib/salt',
+      'pki':           '/var/lib/salt/pki',
+    },
+  },
+  'cloud': {
+    'keys':      {},
+    'providers': {},
+    'profiles':  {},
+  },
+  'minion': {
+    'group': {
+      'name': 'root',
+    },
+    'options': {
+      'masterless': false
+    },
+    'pkgs': {
+      'primary': 'salt-minion',
+      'dependencies': [],
+    },
+    'service': {
+      'name':   'salt-minion',
+      'mode':   'running',
+      'enable': true,
+    },
+    'user': {
+      'name': 'root',
+    },
+  },
+  'master': {
+    'configuration': {},
+    'group': {
+      'name': 'salt',
+    },
+    'keys': {
+      'ssh': {},
+      'gpg': {},
+    },
+    'options': {
+      'gpg': false,
+    },
+    'pkgs': {
+      'primary': 'salt-master',
+      'dependencies': [],
+    },
+    'service': {
+      'name': 'salt-minion',
+    },
+    'user': {
+      'name': 'salt',
+    },
+  },
+} %}
+
+{% if salt['pillar.get']('salt:minion:options:masterless', false) is sameas true %}
+  {% do base.minion.configuration.update({"file_client": "local"}) %}
+  {% do base.minion.service.update({
+    "mode":   "dead",
+    "enable": false,
+  }) %}
+{% endif %}
+
+{% if salt['pillar.get']('salt:master:options:gpg', false) is sameas true %}
+  {% do base.master.keys.gpg.update({
+    "pubring.gpg": none,
+    "secring.gpg": none,
+    "trustdb.gpg": none,
+  }) %}
+  {% do base.master.configuration.update({
+    "gpg_keydir": base.common.directories.configuration ~ '/master.gpgkeys.d',
+  }) %}
+{% endif %}
+
+{#
+  Contrary to other formulas, we're not using the formula's name
+  for the primary context variable as `salt` is reserved for SaltStack's
+  own "dunder" context.
+#}
+
+{% set base_with_pillar = salt['grains.filter_by']({
+  'base': base,
+  'Debian': {
+    'master': {
+      'pkgs': {
+        'dependencies': ['python-pygit2', 'gnupg'],
+      },
+    },
+  },
+}, base='base', merge=salt['pillar.get']('salt', {})) %}
+
+{# Now set a few configuration options for each component based on the used directories etc #}
+{% set configmap = {
+  'cloud': {
+    'configuration': {
+      'cachedir': base_with_pillar.common.directories.cache ~ '/cloud',
+      'log_file': base_with_pillar.common.directories.log ~ '/cloud/cloud.log',
+    },
+  },
+  'master': {
+    'configuration': {
+      'cachedir': base_with_pillar.common.directories.cache ~ '/master',
+      'log_file': base_with_pillar.common.directories.log ~ '/master/master.log',
+      'pki_dir':  base_with_pillar.common.directories.pki ~ '/master',
+    },
+  },
+  'minion': {
+    'configuration': {
+      'cachedir': base_with_pillar.common.directories.cache ~ '/minion',
+      'log_file': base_with_pillar.common.directories.log ~ '/minion/minion.log',
+      'pki_dir':  base_with_pillar.common.directories.pki ~ '/minion',
+    },
+  },
+} %}
+
+{# ...and finally, merge the configmap over the existing data into `saltdata` #}
+{% set saltdata = salt['grains.filter_by']({
+  'base': base_with_pillar
+}, base='base', merge=configmap) %}

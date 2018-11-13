@@ -1,0 +1,12 @@
+{%- from "salt/map.jinja" import saltdata -%}
+[Service]
+User={{ saltdata.master.user.name }}
+Group={{ saltdata.master.group.name }}
+DynamicUser=yes
+RuntimeDirectory=salt/master
+LogsDirectory=salt/master
+CacheDirectory=salt/master
+StateDirectory=salt/pki/master
+ConfigurationDirectoryMode=0700
+ConfigurationDirectory=salt/master.d salt/master.gpgkeys.d salt/master.sshkeys.d
+ReadOnlyPaths=/etc/salt/master /etc/salt/master.d/managed.conf
