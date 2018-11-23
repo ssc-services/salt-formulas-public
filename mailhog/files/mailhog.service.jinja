@@ -1,0 +1,12 @@
+{%- from "mailhog/map.jinja" import mailhog -%}
+[Unit]
+Description=Web and API based SMTP testing
+
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/mailhog{%- for param, value in mailhog.service.params.items() %} -{{ param }}{{ ' ' ~ value if value is string or value is number else '' }}{%- endfor %}
+DynamicUser=true
+StateDirectory=mailhog/maildir
+
+[Install]
+WantedBy=multi-user.target

@@ -1,0 +1,22 @@
+{% set version = salt['pillar.get']('mailhog:version', '1.0.0') %}
+
+{% set base = {
+  'source': {
+    'url': 'https://github.com/mailhog/MailHog/releases/download/v' ~ version ~ '/MailHog_linux_amd64',
+    'checksum': {
+      'type':  'sha256',
+      'value': 'ba921e04438e176c474d533447ae64707ffcdd1230f0153f86cb188d348f25c0',
+    },
+  },
+  'service': {
+    'params': {
+      'hostname':     grains.get('fqdn', 'localhost'),
+      'storage':      'maildir',
+      'maildir-path': '/var/lib/mailhog/maildir',
+    },
+  },
+} %}
+
+{% set mailhog = salt['grains.filter_by']({
+  'base': base,
+}, base='base', merge=salt['pillar.get']('mailhog', {})) %}
