@@ -1,5 +1,7 @@
 {% set version = salt['pillar.get']('mailhog:version', '1.0.0') %}
 
+{% set maildir_path = '/var/lib/mailhog/maildir' %}
+
 {% set base = {
   'source': {
     'url': 'https://github.com/mailhog/MailHog/releases/download/v' ~ version ~ '/MailHog_linux_amd64',
@@ -11,6 +13,7 @@
   'service': {
     'params': {
       'hostname':     grains.get('fqdn', 'localhost'),
+      'maildir-path': maildir_path,
     },
   },
 } %}
@@ -18,3 +21,8 @@
 {% set mailhog = salt['grains.filter_by']({
   'base': base,
 }, base='base', merge=salt['pillar.get']('mailhog', {})) %}
+
+{% if salt['pillar.get']('mailhog:service:params:maildir-path', maildir_path) != maildir_path %}
+  {% do salt['log.warning']('The service param "maildir-path" cannot be overwritten. Fixed path is required by "StateDirectory=" in systemd service unit!') %}
+  {% do mailhog.service.params.update({'maildir-path': maildir_path}) %}
+{% endif %}
