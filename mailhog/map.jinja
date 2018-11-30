@@ -15,6 +15,11 @@
       'hostname':     grains.get('fqdn', 'localhost'),
       'maildir-path': maildir_path,
     },
+    'unit': {
+      'Service': {
+        'MemoryHigh': '512M',
+      },
+    },
   },
 } %}
 

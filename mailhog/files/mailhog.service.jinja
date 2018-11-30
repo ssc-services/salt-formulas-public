@@ -8,6 +8,11 @@ ExecStart=/usr/local/bin/mailhog{%- for param, value in mailhog.service.params.i
 DynamicUser=true
 StateDirectory=mailhog/maildir
 StandardOutput=null
+CPUAccounting=yes
+MemoryAccounting=yes
+IPAccounting=yes
+IOAccounting=yes
+MemoryHigh={{ mailhog.service.unit.Service.MemoryHigh }}
 
 [Install]
 WantedBy=multi-user.target
