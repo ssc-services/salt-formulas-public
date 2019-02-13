@@ -2,6 +2,7 @@
 
 include:
   - salt.common
+  - salt.minion.cachecleaner
 
 salt-minion-pkg-dependencies:
   pkg.latest:
@@ -61,11 +62,13 @@ salt-minion-service:
     - require:
       - pkg:  salt-minion-pkg-dependencies
       - pkg:  salt-minion-pkg
-      - file: salt-minion-configuration
       - sls:  salt.common
       - file: salt-minion-directory-cache
       - file: salt-minion-directory-pki
     - watch:
       - pkg:  salt-minion-pkg-dependencies
       - pkg:  salt-minion-pkg
-      - file: salt-minion-configuration
+
+salt-minion-reload-units:
+  module.wait:
+    - name: service.systemctl_reload
