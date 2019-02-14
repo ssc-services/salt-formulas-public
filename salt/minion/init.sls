@@ -25,7 +25,7 @@ salt-minion-directory-configuration:
     - require:
       - file: salt-common-directory-configuration
 
-{% for dir in ['cache', 'log', 'persistence', 'pki'] %}
+{% for dir in ['cache', 'persistence', 'pki'] %}
 salt-minion-directory-{{ dir }}:
   file.directory:
     - name:  {{ saltdata.common.directories.get(dir) }}/minion
@@ -59,7 +59,6 @@ salt-minion-service:
       - pkg:  salt-minion-pkg
       - file: salt-minion-configuration
       - file: salt-minion-directory-cache
-      - file: salt-minion-directory-log
       - file: salt-minion-directory-pki
     - watch:
       - pkg:  salt-minion-pkg-dependencies
