@@ -1,4 +1,4 @@
-{% from "salt/map.jinja" import saltdata %}
+{%- from "salt/map.jinja" import saltdata %}
 
 # by setting the `salt-minion` service to `Restart=always`, it'll be
 # automatically restarted once the cache-cleaner has finished its job

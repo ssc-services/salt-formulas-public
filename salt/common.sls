@@ -1,4 +1,4 @@
-{% from "salt/map.jinja" import saltdata %}
+{%- from "salt/map.jinja" import saltdata %}
 
 # TODO: make this distribution independent & more generic
 saltstack-deb-repo:
@@ -24,7 +24,7 @@ salt-common-group:
     - require_in:
       - user: salt-common-user
 
-{% for dir, path in saltdata.common.directories.items() %}
+{%- for dir, path in saltdata.common.directories.items() %}
 salt-common-directory-{{ dir }}:
   file.directory:
     - name:     {{ path }}
@@ -35,4 +35,4 @@ salt-common-directory-{{ dir }}:
     - require:
       - user:  salt-common-user
       - group: salt-common-group
-{% endfor %}
+{%- endfor %}

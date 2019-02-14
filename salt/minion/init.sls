@@ -1,4 +1,4 @@
-{% from "salt/map.jinja" import saltdata %}
+{%- from "salt/map.jinja" import saltdata %}
 
 include:
   - salt.common
@@ -26,7 +26,7 @@ salt-minion-directory-configuration:
     - require:
       - file: salt-common-directory-configuration
 
-{% for dir in ['cache', 'persistence', 'pki'] %}
+{%- for dir in ['cache', 'persistence', 'pki'] %}
 salt-minion-directory-{{ dir }}:
   file.directory:
     - name:  {{ saltdata.common.directories.get(dir) }}/minion
@@ -36,7 +36,7 @@ salt-minion-directory-{{ dir }}:
     - force: true
     - require:
       - file: salt-common-directory-{{ dir }}
-{% endfor %}
+{%- endfor %}
 
 {%- if saltdata.minion.configuration.mode == 'managed' %}
 salt-minion-configuration:

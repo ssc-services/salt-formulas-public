@@ -1,4 +1,4 @@
-{% set base = {
+{%- set base = {
   'common': {
     'user': {
       'name': 'salt',
@@ -74,26 +74,26 @@
   },
 } %}
 
-{% if salt['pillar.get']('salt:minion:options:masterless', false) is sameas true %}
-  {% do base.master.configuration.update({"mode": "unmanaged"}) %}
-  {% do base.minion.configuration.update({"mode": "unmanaged"}) %}
-  {% do base.minion.configuration.data.update({"file_client": "local"}) %}
-  {% do base.minion.service.update({
+{%- if salt['pillar.get']('salt:minion:options:masterless', false) is sameas true %}
+  {%- do base.master.configuration.update({"mode": "unmanaged"}) %}
+  {%- do base.minion.configuration.update({"mode": "unmanaged"}) %}
+  {%- do base.minion.configuration.data.update({"file_client": "local"}) %}
+  {%- do base.minion.service.update({
     "mode":   "dead",
     "enable": false,
   }) %}
-{% endif %}
+{%- endif %}
 
-{% if salt['pillar.get']('salt:master:options:gpg', false) is sameas true %}
-  {% do base.master.keys.gpg.update({
+{%- if salt['pillar.get']('salt:master:options:gpg', false) is sameas true %}
+  {%- do base.master.keys.gpg.update({
     "pubring.gpg": none,
     "secring.gpg": none,
     "trustdb.gpg": none,
   }) %}
-  {% do base.master.configuration.update({
+  {%- do base.master.configuration.update({
     "gpg_keydir": base.common.directories.configuration ~ '/master.gpgkeys.d',
   }) %}
-{% endif %}
+{%- endif %}
 
 {#
   Contrary to other formulas, we're not using the formula's name
@@ -101,7 +101,7 @@
   own "dunder" context.
 #}
 
-{% set base_with_pillar = salt['grains.filter_by']({
+{%- set base_with_pillar = salt['grains.filter_by']({
   'base': base,
   'Debian': {
     'master': {
@@ -113,7 +113,7 @@
 }, base='base', merge=salt['pillar.get']('salt', {})) %}
 
 {# Now set a few configuration options for each component based on the used directories etc #}
-{% set configmap = {
+{%- set configmap = {
   'cloud': {
     'configuration': {
       'cachedir': base_with_pillar.common.directories.cache ~ '/cloud',
@@ -137,6 +137,6 @@
 } %}
 
 {# ...and finally, merge the configmap over the existing data into `saltdata` #}
-{% set saltdata = salt['grains.filter_by']({
+{%- set saltdata = salt['grains.filter_by']({
   'base': base_with_pillar
 }, base='base', merge=configmap) %}
