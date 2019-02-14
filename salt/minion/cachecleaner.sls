@@ -1,7 +1,9 @@
+{% from "salt/map.jinja" import saltdata %}
+
 # by setting the `salt-minion` service to `Restart=always`, it'll be
 # automatically restarted once the cache-cleaner has finished its job
 salt-minion-service-override:
-  file.managed:
+  file.{{ 'managed' if saltdata.minion.cachecleaner.enabled is sameas true else 'absent' }}:
     - name: /etc/systemd/system/salt-service.d/override.conf
     - makedirs: true
     - contents:
@@ -14,7 +16,7 @@ salt-minion-service-override:
 
 {%- for type in ['service', 'timer'] %}
 salt-minion-cache-clear-{{ type }}-unit:
-  file.managed:
+  file.{{ 'managed' if saltdata.minion.cachecleaner.enabled is sameas true else 'absent' }}:
       - name:     /etc/systemd/system/salt-minion-cache-clear.{{ type }}
       - user:     root
       - group:    root
@@ -26,10 +28,10 @@ salt-minion-cache-clear-{{ type }}-unit:
         - module: salt-minion-reload-units
 {%- endfor %}
 
-salt-minion-cache-clear-service:
-  service.running:
+salt-minion-cache-clear-timer:
+  service.{{ 'running' if saltdata.minion.cachecleaner.enabled is sameas true else 'dead' }}:
       - name:   salt-minion-cache-clear.timer
-      - enable: true
+      - enable: {{ saltdata.minion.cachecleaner.enabled|yaml }}
       - require:
         - module: salt-minion-reload-units
         - file:   salt-minion-cache-clear-service-unit
