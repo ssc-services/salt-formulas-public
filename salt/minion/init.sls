@@ -17,7 +17,7 @@ salt-minion-pkg:
       - pkgrepo: saltstack-deb-repo
 
 salt-minion-directory-configuration:
-  file.directory:
+  file.{{ 'directory' if saltdata.minion.configuration.mode == 'managed' else 'exists' }}:
     - name:  {{ saltdata.common.directories.configuration }}/minion.d
     - user:  {{ saltdata.minion.user.name }}
     - group: {{ saltdata.minion.group.name }}
@@ -37,6 +37,7 @@ salt-minion-directory-{{ dir }}:
       - file: salt-common-directory-{{ dir }}
 {% endfor %}
 
+{%- if saltdata.minion.configuration.mode == 'managed' %}
 salt-minion-configuration:
   file.serialize:
     - name:      {{ saltdata.common.directories.configuration }}/minion.d/managed.conf
@@ -47,8 +48,11 @@ salt-minion-configuration:
     - dataset:   {{ saltdata.minion.configuration|yaml }}
     - require:
       - file: salt-minion-directory-configuration
+    - require_in:
+      - service: salt-minion-service
     - watch_in:
       - service: salt-minion-service
+{%- endif %}
 
 salt-minion-service:
   service.{{ saltdata.minion.service.mode }}:
@@ -58,6 +62,7 @@ salt-minion-service:
       - pkg:  salt-minion-pkg-dependencies
       - pkg:  salt-minion-pkg
       - file: salt-minion-configuration
+      - sls:  salt.common
       - file: salt-minion-directory-cache
       - file: salt-minion-directory-pki
     - watch:

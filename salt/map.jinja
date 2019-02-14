@@ -20,6 +20,10 @@
     'profiles':  {},
   },
   'minion': {
+    'configuration': {
+      'mode': 'managed',
+      'data': {},
+    },
     'group': {
       'name': 'root',
     },
@@ -40,7 +44,10 @@
     },
   },
   'master': {
-    'configuration': {},
+    'configuration': {
+      'mode': 'managed',
+      'data': {},
+    },
     'group': {
       'name': 'salt',
     },
@@ -65,7 +72,9 @@
 } %}
 
 {% if salt['pillar.get']('salt:minion:options:masterless', false) is sameas true %}
-  {% do base.minion.configuration.update({"file_client": "local"}) %}
+  {% do base.master.configuration.update({"mode": "unmanaged"}) %}
+  {% do base.minion.configuration.update({"mode": "unmanaged"}) %}
+  {% do base.minion.configuration.data.update({"file_client": "local"}) %}
   {% do base.minion.service.update({
     "mode":   "dead",
     "enable": false,
