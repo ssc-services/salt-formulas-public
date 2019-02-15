@@ -5,13 +5,13 @@ include:
   - salt.minion.cachecleaner
 
 salt-minion-pkg-dependencies:
-  pkg.latest:
+  pkg.installed:
     - pkgs: {{ saltdata.minion.pkgs.dependencies|yaml }}
     - require_in:
       - pkg: salt-minion-pkg
 
 salt-minion-pkg:
-  pkg.latest:
+  pkg.installed:
     - name: {{ saltdata.minion.pkgs.primary }}
     - require:
       - sls: salt.common.pkgrepo
