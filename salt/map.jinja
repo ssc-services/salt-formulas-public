@@ -107,6 +107,9 @@
   }) %}
 {%- endif %}
 
+{# until a migration scenario for existing PKI data is provided, stick with the legacy PKI location #}
+{%- do base.minion.directories.update({"pki": '/etc/salt/pki'}) %}
+
 {#
   Contrary to other formulas, we're not using the formula's name
   for the primary context variable as `salt` is reserved for SaltStack's
