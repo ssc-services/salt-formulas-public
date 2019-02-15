@@ -91,7 +91,7 @@
 {%- endif %}
 
 {%- if salt['pillar.get']('salt:master:options:gpg', false) is sameas true %}
-  {%- do base.master.keys.gpg.update({
+  {%- do base.master['keys'].gpg.update({
     "pubring.gpg": none,
     "secring.gpg": none,
     "trustdb.gpg": none,
