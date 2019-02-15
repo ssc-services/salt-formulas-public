@@ -1,4 +1,4 @@
-{% from "salt/map.jinja" import saltdata %}
+{%- from "salt/map.jinja" import saltdata %}
 
 include:
   - salt.common
@@ -37,7 +37,7 @@ salt-master-configuration:
     - watch_in:
       - service: salt-master-service
 
-{% for keytype in ['gpg', 'ssh'] %}
+{%- for keytype in ['gpg', 'ssh'] %}
 salt-master-directory-{{ keytype }}keys:
   file.directory:
     - name:  {{ saltdata.common.directories.configuration }}/master.{{ keytype }}keys.d
@@ -49,7 +49,7 @@ salt-master-directory-{{ keytype }}keys:
     - watch_in:
       - service: salt-master
 
-  {% for key, value in saltdata.master['keys'][keytype].items() %}
+  {%- for key, value in saltdata.master['keys'][keytype].items() %}
 salt-master-keys-{{ keytype }}-key-{{ key }}:
   file.managed:
     - name:       {{ saltdata.common.directories.configuration }}/master.{{ keytype }}keys.d/{{ key }}
@@ -62,8 +62,8 @@ salt-master-keys-{{ keytype }}-key-{{ key }}:
       - file: salt-master-directory-{{ keytype }}keys
     - watch_in:
       - service: salt-master-service
-  {% endfor %}
-{% endfor %}
+  {%- endfor %}
+{%- endfor %}
 
 salt-master-gpg-agent-configuration:
   file.managed:
@@ -78,8 +78,8 @@ salt-master-gpg-agent-configuration:
 # Using base64 dumps for this is quite ugly, there must be better ways to manage GPG keys in Salt, but:
 # - states.gpg: can fetch keys only from a keyserver
 # - GGP Pillars should be replaced sooner than later with Vault-managed Pillars/credentials anyways
-{% if saltdata.master.options.get('gpg', false) is sameas true %}
-  {% for file in ['pubring.gpg', 'secring.gpg', 'trustdb.gpg'] %}
+{%- if saltdata.master.options.get('gpg', false) is sameas true %}
+  {%- for file in ['pubring.gpg', 'secring.gpg', 'trustdb.gpg'] %}
 salt-master-gpg-data-{{ file }}-saltsrc:
   file.decode:
     - name:            {{ saltdata.common.directories.configuration }}/gpgkeys/{{ file }}.saltsrc
@@ -106,8 +106,8 @@ salt-master-gpg-data-{{ file }}:
       - file: salt-master-gpg-data-{{ file }}-saltsrc
     - watch_in:
       - service: salt-master-service
-  {% endfor %}
-{% endif %}
+  {%- endfor %}
+{%- endif %}
 
 salt-master-service-unit-dropin:
   file.managed:
