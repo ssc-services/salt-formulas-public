@@ -37,24 +37,10 @@ salt-master-configuration:
     - watch_in:
       - service: salt-master-service
 
-{% set components = {
-  'cloud': [
-    'conf',
-    'keys',
-    'maps',
-    'profiles',
-    'providers',
-  ],
-  'master': [
-    'gpgkeys',
-    'sshkeys',
-  ],
-} %}
-{% for component, names in components.items() %}
-  {% for name in names %}
-salt-master-directory-{{ component }}-{{ name }}:
+{% for keytype in ['gpg', 'ssh'] %}
+salt-master-directory-{{ keytype }}keys:
   file.directory:
-    - name:  {{ saltdata.common.directories.configuration }}/{{ component }}.{{ name }}.d
+    - name:  {{ saltdata.common.directories.configuration }}/master.{{ keytype }}keys.d
     - user:  {{ saltdata.master.user.name }}
     - group: {{ saltdata.master.group.name }}
     - mode:  0700
@@ -62,34 +48,18 @@ salt-master-directory-{{ component }}-{{ name }}:
       - file: salt-common-directory-configuration
     - watch_in:
       - service: salt-master
-  {% endfor %}
-{% endfor %}
 
-{% for key, value in saltdata.cloud['keys'].items() %}
-salt-cloud-keys-key-{{ key }}:
-  file.managed:
-    - name:  {{ saltdata.common.directories.configuration }}/cloud.keys.d/{{ key }}
-    - user:  {{ saltdata.master.user.name }}
-    - group: {{ saltdata.master.group.name }}
-    - mode:  0400
-    - contents: |
-        {{ value }}
-    - require:
-      - file: salt-master-directory-cloud-keys
-{% endfor %}
-
-{% for keytype in ['gpg', 'ssh'] %}
   {% for key, value in saltdata.master['keys'][keytype].items() %}
 salt-master-keys-{{ keytype }}-key-{{ key }}:
   file.managed:
-    - name:            {{ saltdata.common.directories.configuration }}/master.{{ keytype }}keys.d/{{ key }}
-    - user:            {{ saltdata.master.user.name }}
-    - group:           {{ saltdata.master.group.name }}
-    - mode:            0400
+    - name:       {{ saltdata.common.directories.configuration }}/master.{{ keytype }}keys.d/{{ key }}
+    - user:       {{ saltdata.master.user.name }}
+    - group:      {{ saltdata.master.group.name }}
+    - mode:       0400
     - contents: |
         {{ value }}
     - require:
-      - file: salt-master-directory-master-{{ keytype }}keys
+      - file: salt-master-directory-{{ keytype }}keys
     - watch_in:
       - service: salt-master-service
   {% endfor %}
@@ -103,7 +73,7 @@ salt-master-gpg-agent-configuration:
     - mode:     0400
     - contents: "pinentry-program /usr/bin/pinentry-curses"
     - require:
-      - file: salt-master-directory-master-gpgkeys
+      - file: salt-master-directory-gpgkeys
 
 # Using base64 dumps for this is quite ugly, there must be better ways to manage GPG keys in Salt, but:
 # - states.gpg: can fetch keys only from a keyserver
@@ -121,7 +91,7 @@ salt-master-gpg-data-{{ file }}-saltsrc:
     - contents_pillar: salt:master:gpg:data:{{ file }}
     - encoding_type:   base64
     - require:
-      - file: salt-master-directory-master-gpgkeys
+      - file: salt-master-directory-gpgkeys
 
 salt-master-gpg-data-{{ file }}:
   file.managed:
@@ -138,35 +108,6 @@ salt-master-gpg-data-{{ file }}:
       - service: salt-master-service
   {% endfor %}
 {% endif %}
-
-{% for key, value in saltdata.cloud.providers.items() %}
-salt-cloud-providers-{{ key }}:
-  file.serialize:
-    - name:      {{ saltdata.common.directories.configuration }}/cloud.providers.d/{{ key }}.conf
-    - user:      {{ saltdata.master.user.name }}
-    - group:     {{ saltdata.master.group.name }}
-    - mode:      0400
-    - dataset:   {{ value|yaml }}
-    - formatter: YAML
-    - require:
-      - file: salt-master-directory-cloud-providers
-{% endfor %}
-
-{% for key, value in saltdata.cloud.profiles.items() %}
-salt-cloud-profiles-{{ key }}:
-  file.serialize:
-    - name:      {{ saltdata.common.directories.configuration }}/cloud.profiles.d/{{ key }}.conf
-    - user:      {{ saltdata.master.user.name }}
-    - group:     {{ saltdata.master.group.name }}
-    - mode:      0400
-    - dataset: |
-        {{ value|yaml }}
-    - formatter: YAML
-    - require:
-      - file: salt-master-directory-cloud-profiles
-    - watch_in:
-      - service: salt-master
-{% endfor %}
 
 salt-master-service-unit-dropin:
   file.managed:

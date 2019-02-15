@@ -1,23 +1,31 @@
-{%- set base = {
-  'common': {
-    'user': {
-      'name': 'salt',
-    },
-    'group': {
-      'name': 'salt',
-    },
-    'directories': {
-      'cache':         '/var/cache/salt',
-      'configuration': '/etc/salt',
-      'log':           '/var/log/salt',
-      'persistence':   '/var/lib/salt',
-      'pki':           '/var/lib/salt/pki',
-    },
+{%- set common_base = {
+  'user': {
+    'name': 'salt',
   },
+  'group': {
+    'name': 'salt',
+  },
+  'directories': {
+    'cache':         '/var/cache/salt',
+    'configuration': '/etc/salt',
+    'log':           '/var/log/salt',
+    'persistence':   '/var/lib/salt',
+    'pki':           '/var/lib/salt/pki',
+  },
+} %}
+
+{%- set base = {
+  'common': common_base,
   'cloud': {
+    'user':      common_base.user,
+    'group':     common_base.group,
     'keys':      {},
     'providers': {},
     'profiles':  {},
+    'pkgs':      {
+      'primary':      'salt-cloud',
+      'dependencies': [],
+    },
   },
   'minion': {
     'configuration': {
@@ -53,9 +61,7 @@
       'mode': 'managed',
       'data': {},
     },
-    'group': {
-      'name': 'salt',
-    },
+    'group': common_base.group,
     'keys': {
       'ssh': {},
       'gpg': {},
@@ -70,9 +76,7 @@
     'service': {
       'name': 'salt-minion',
     },
-    'user': {
-      'name': 'salt',
-    },
+    'user': common_base.user,
   },
 } %}
 
