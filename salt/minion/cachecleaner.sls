@@ -9,8 +9,6 @@ salt-minion-service-override:
     - contents:
       - '[Service]'
       - Restart=always
-    - require_in:
-      - service: salt-minion-service
     - watch_in:
       - service: salt-minion-service
 

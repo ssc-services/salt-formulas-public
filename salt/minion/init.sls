@@ -48,8 +48,6 @@ salt-minion-configuration:
     - dataset:   {{ saltdata.minion.configuration|yaml }}
     - require:
       - file: salt-minion-directory-configuration
-    - require_in:
-      - service: salt-minion-service
     - watch_in:
       - service: salt-minion-service
 {%- endif %}
@@ -59,8 +57,6 @@ salt-minion-service:
     - name:   {{ saltdata.minion.service.name }}
     - enable: {{ saltdata.minion.service.enable }}
     - require:
-      - pkg:  salt-minion-pkg-dependencies
-      - pkg:  salt-minion-pkg
       - sls:  salt.common
       - file: salt-minion-directory-cache
       - file: salt-minion-directory-pki

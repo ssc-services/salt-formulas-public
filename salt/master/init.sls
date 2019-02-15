@@ -90,8 +90,6 @@ salt-master-keys-{{ keytype }}-key-{{ key }}:
         {{ value }}
     - require:
       - file: salt-master-directory-master-{{ keytype }}keys
-    - require_in:
-      - service: salt-master-service
     - watch_in:
       - service: salt-master-service
   {% endfor %}
@@ -136,8 +134,6 @@ salt-master-gpg-data-{{ file }}:
       - file: salt-master-gpg-data-{{ file }}-saltsrc
     - require:
       - file: salt-master-gpg-data-{{ file }}-saltsrc
-    - require_in:
-      - service: salt-master-service
     - watch_in:
       - service: salt-master-service
   {% endfor %}
@@ -168,8 +164,6 @@ salt-cloud-profiles-{{ key }}:
     - formatter: YAML
     - require:
       - file: salt-master-directory-cloud-profiles
-    - require_in:
-      - service: salt-master
     - watch_in:
       - service: salt-master
 {% endfor %}
@@ -183,8 +177,6 @@ salt-master-service-unit-dropin:
     - group:    {{ saltdata.master.group.name }}
     - mode:     0400
     - makedirs: true
-    - require_in:
-      - service: salt-master-service
     - watch_in:
       - service: salt-master-service
 
@@ -202,10 +194,7 @@ salt-master-service:
   service.running:
     - name: salt-master
     - enable: true
-    - require:
+    - watch:
+      - file: salt-master-configuration
       - pkg:  salt-master-pkg-dependencies
       - pkg:  salt-master-pkg
-      - file: salt-master-configuration
-    - watch:
-      - pkg: salt-master-pkg-dependencies
-      - pkg: salt-master-pkg
