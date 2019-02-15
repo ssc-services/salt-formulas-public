@@ -14,8 +14,7 @@ salt-minion-pkg:
   pkg.latest:
     - name: {{ saltdata.minion.pkgs.primary }}
     - require:
-      # TODO: depend on a generic state which abstracts distribution-specific repositories
-      - pkgrepo: saltstack-deb-repo
+      - sls: salt.common.pkgrepo
 
 salt-minion-directory-configuration:
   file.{{ 'directory' if saltdata.minion.configuration.mode == 'managed' else 'exists' }}:

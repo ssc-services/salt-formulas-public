@@ -13,8 +13,7 @@ salt-master-pkg:
   pkg.latest:
     - name: {{ saltdata.master.pkgs.primary }}
     - require:
-      # TODO: depend on a generic state which abstracts distribution-specific repositories
-      - pkgrepo: saltstack-deb-repo
+      - sls: salt.common.pkgrepo
 
 salt-master-directory-configuration:
   file.directory:
