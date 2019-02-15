@@ -17,7 +17,7 @@ salt-master-pkg:
 
 salt-master-directory-configuration:
   file.directory:
-    - name:  {{ saltdata.common.directories.configuration }}/master.d
+    - name:  {{ saltdata.master.directories.configuration }}/master.d
     - user:  {{ saltdata.master.user.name }}
     - group: {{ saltdata.master.group.name }}
     - mode:  0700
@@ -26,7 +26,7 @@ salt-master-directory-configuration:
 
 salt-master-configuration:
   file.serialize:
-    - name:      {{ saltdata.common.directories.configuration }}/master.d/managed.conf
+    - name:      {{ saltdata.master.directories.configuration }}/master.d/managed.conf
     - user:      {{ saltdata.master.user.name }}
     - group:     {{ saltdata.master.group.name }}
     - mode:      0400
@@ -40,7 +40,7 @@ salt-master-configuration:
 {%- for keytype in ['gpg', 'ssh'] %}
 salt-master-directory-{{ keytype }}keys:
   file.directory:
-    - name:  {{ saltdata.common.directories.configuration }}/master.{{ keytype }}keys.d
+    - name:  {{ saltdata.master.directories.configuration }}/master.{{ keytype }}keys.d
     - user:  {{ saltdata.master.user.name }}
     - group: {{ saltdata.master.group.name }}
     - mode:  0700
@@ -52,7 +52,7 @@ salt-master-directory-{{ keytype }}keys:
   {%- for key, value in saltdata.master['keys'][keytype].items() %}
 salt-master-keys-{{ keytype }}-key-{{ key }}:
   file.managed:
-    - name:       {{ saltdata.common.directories.configuration }}/master.{{ keytype }}keys.d/{{ key }}
+    - name:       {{ saltdata.master.directories.configuration }}/master.{{ keytype }}keys.d/{{ key }}
     - user:       {{ saltdata.master.user.name }}
     - group:      {{ saltdata.master.group.name }}
     - mode:       0400
@@ -67,7 +67,7 @@ salt-master-keys-{{ keytype }}-key-{{ key }}:
 
 salt-master-gpg-agent-configuration:
   file.managed:
-    - name:     {{ saltdata.common.directories.configuration }}/master.gpgkeys.d/gpg-agent.conf
+    - name:     {{ saltdata.master.directories.configuration }}/master.gpgkeys.d/gpg-agent.conf
     - user:     {{ saltdata.master.user.name }}
     - group:    {{ saltdata.master.group.name }}
     - mode:     0400
@@ -82,7 +82,7 @@ salt-master-gpg-agent-configuration:
   {%- for file in ['pubring.gpg', 'secring.gpg', 'trustdb.gpg'] %}
 salt-master-gpg-data-{{ file }}-saltsrc:
   file.decode:
-    - name:            {{ saltdata.common.directories.configuration }}/gpgkeys/{{ file }}.saltsrc
+    - name:            {{ saltdata.master.directories.configuration }}/gpgkeys/{{ file }}.saltsrc
     # pulling data in an SLS straight from a Pillar is an exception in this case,
     # as `file.decode` only supports it this way and there's currently no support
     # for "Pillar files". See also:
@@ -95,8 +95,8 @@ salt-master-gpg-data-{{ file }}-saltsrc:
 
 salt-master-gpg-data-{{ file }}:
   file.managed:
-    - name:   {{ saltdata.common.directories.configuration }}/gpgkeys/{{ file }}
-    - source: {{ saltdata.common.directories.configuration }}/{{ file }}.saltsrc
+    - name:   {{ saltdata.master.directories.configuration }}/gpgkeys/{{ file }}
+    - source: {{ saltdata.master.directories.configuration }}/{{ file }}.saltsrc
     - user:   {{ saltdata.master.user.name }}
     - group:  {{ saltdata.master.group.name }}
     - mode:   0400

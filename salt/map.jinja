@@ -26,12 +26,14 @@
       'primary':      'salt-cloud',
       'dependencies': [],
     },
+    'directories': common_base.directories.copy(),
   },
   'minion': {
     'configuration': {
       'mode': 'managed',
       'data': {},
     },
+    'directories': common_base.directories.copy(),
     'group': {
       'name': 'root',
     },
@@ -61,6 +63,7 @@
       'mode': 'managed',
       'data': {},
     },
+    'directories': common_base.directories.copy(),
     'gpg': {
       'pinentry_program': '/usr/bin/pinentry-curses',
     },
@@ -100,7 +103,7 @@
     "trustdb.gpg": none,
   }) %}
   {%- do base.master.configuration.update({
-    "gpg_keydir": base.common.directories.configuration ~ '/master.gpgkeys.d',
+    "gpg_keydir": base.master.directories.configuration ~ '/master.gpgkeys.d',
   }) %}
 {%- endif %}
 
@@ -125,22 +128,22 @@
 {%- set configmap = {
   'cloud': {
     'configuration': {
-      'cachedir': base_with_pillar.common.directories.cache ~ '/cloud',
-      'log_file': base_with_pillar.common.directories.log ~ '/cloud/cloud.log',
+      'cachedir': base_with_pillar.cloud.directories.cache ~ '/cloud',
+      'log_file': base_with_pillar.cloud.directories.log ~ '/cloud/cloud.log',
     },
   },
   'master': {
     'configuration': {
-      'cachedir': base_with_pillar.common.directories.cache ~ '/master',
-      'log_file': base_with_pillar.common.directories.log ~ '/master/master.log',
-      'pki_dir':  base_with_pillar.common.directories.pki ~ '/master',
+      'cachedir': base_with_pillar.master.directories.cache ~ '/master',
+      'log_file': base_with_pillar.master.directories.log ~ '/master/master.log',
+      'pki_dir':  base_with_pillar.master.directories.pki ~ '/master',
     },
   },
   'minion': {
     'configuration': {
-      'cachedir': base_with_pillar.common.directories.cache ~ '/minion',
-      'log_file': base_with_pillar.common.directories.log ~ '/minion/minion.log',
-      'pki_dir':  base_with_pillar.common.directories.pki ~ '/minion',
+      'cachedir': base_with_pillar.minion.directories.cache ~ '/minion',
+      'log_file': base_with_pillar.minion.directories.log ~ '/minion/minion.log',
+      'pki_dir':  base_with_pillar.minion.directories.pki ~ '/minion',
     },
   },
 } %}

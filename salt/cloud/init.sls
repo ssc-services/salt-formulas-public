@@ -25,7 +25,7 @@ salt-cloud-pkg:
 {%- for element in elements %}
 salt-cloud-directory-{{ element }}:
   file.directory:
-    - name:  {{ saltdata.common.directories.configuration }}/cloud.{{ element }}.d
+    - name:  {{ saltdata.cloud.directories.configuration }}/cloud.{{ element }}.d
     - user:  {{ saltdata.cloud.user.name }}
     - group: {{ saltdata.cloud.group.name }}
     - mode:  0700
@@ -36,7 +36,7 @@ salt-cloud-directory-{{ element }}:
 {%- for key, value in saltdata.cloud['keys'].items() %}
 salt-cloud-keys-key-{{ key }}:
   file.managed:
-    - name:  {{ saltdata.common.directories.configuration }}/cloud.keys.d/{{ key }}
+    - name:  {{ saltdata.cloud.directories.configuration }}/cloud.keys.d/{{ key }}
     - user:  {{ saltdata.cloud.user.name }}
     - group: {{ saltdata.cloud.group.name }}
     - mode:  0400
@@ -49,7 +49,7 @@ salt-cloud-keys-key-{{ key }}:
 {%- for key, value in saltdata.cloud.providers.items() %}
 salt-cloud-providers-{{ key }}:
   file.serialize:
-    - name:      {{ saltdata.common.directories.configuration }}/cloud.providers.d/{{ key }}.conf
+    - name:      {{ saltdata.cloud.directories.configuration }}/cloud.providers.d/{{ key }}.conf
     - user:      {{ saltdata.cloud.user.name }}
     - group:     {{ saltdata.cloud.group.name }}
     - mode:      0400
@@ -62,7 +62,7 @@ salt-cloud-providers-{{ key }}:
 {%- for key, value in saltdata.cloud.profiles.items() %}
 salt-cloud-profiles-{{ key }}:
   file.serialize:
-    - name:      {{ saltdata.common.directories.configuration }}/cloud.profiles.d/{{ key }}.conf
+    - name:      {{ saltdata.cloud.directories.configuration }}/cloud.profiles.d/{{ key }}.conf
     - user:      {{ saltdata.cloud.user.name }}
     - group:     {{ saltdata.cloud.group.name }}
     - mode:      0400

@@ -18,7 +18,7 @@ salt-minion-pkg:
 
 salt-minion-directory-configuration:
   file.{{ 'directory' if saltdata.minion.configuration.mode == 'managed' else 'exists' }}:
-    - name:  {{ saltdata.common.directories.configuration }}/minion.d
+    - name:  {{ saltdata.minion.directories.configuration }}/minion.d
     - user:  {{ saltdata.minion.user.name }}
     - group: {{ saltdata.minion.group.name }}
     - mode:  0700
@@ -28,7 +28,7 @@ salt-minion-directory-configuration:
 {%- for dir in ['cache', 'persistence', 'pki'] %}
 salt-minion-directory-{{ dir }}:
   file.directory:
-    - name:  {{ saltdata.common.directories.get(dir) }}/minion
+    - name:  {{ saltdata.minion.directories.get(dir) }}/minion
     - user:  {{ saltdata.minion.user.name }}
     - group: {{ saltdata.minion.group.name }}
     - mode:  0770
@@ -40,7 +40,7 @@ salt-minion-directory-{{ dir }}:
 {%- if saltdata.minion.configuration.mode == 'managed' %}
 salt-minion-configuration:
   file.serialize:
-    - name:      {{ saltdata.common.directories.configuration }}/minion.d/managed.conf
+    - name:      {{ saltdata.minion.directories.configuration }}/minion.d/managed.conf
     - user:      {{ saltdata.minion.user.name }}
     - group:     {{ saltdata.minion.group.name }}
     - mode:      0500
