@@ -71,7 +71,7 @@ salt-master-gpg-agent-configuration:
     - user:     {{ saltdata.master.user.name }}
     - group:    {{ saltdata.master.group.name }}
     - mode:     0400
-    - contents: "pinentry-program /usr/bin/pinentry-curses"
+    - contents: "pinentry-program {{ saltdata.master.gpg.pinentry_program }}"
     - require:
       - file: salt-master-directory-gpgkeys
 
