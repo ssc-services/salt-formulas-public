@@ -67,7 +67,3 @@ salt-minion-service:
     - watch:
       - pkg:  salt-minion-pkg-dependencies
       - pkg:  salt-minion-pkg
-
-salt-minion-reload-units:
-  module.wait:
-    - name: service.systemctl_reload

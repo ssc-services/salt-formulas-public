@@ -29,3 +29,7 @@ salt-common-directory-{{ dir }}:
       - user:  salt-common-user
       - group: salt-common-group
 {%- endfor %}
+
+salt-common-reload-units:
+  module.wait:
+    - name: service.systemctl_reload

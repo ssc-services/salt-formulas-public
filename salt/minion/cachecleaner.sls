@@ -22,10 +22,8 @@ salt-minion-cache-clear-{{ type }}-unit:
       - group:    root
       - source:   salt://salt/minion/files/salt-minion-cache-clear.{{ type }}.jinja
       - template: jinja
-      - require_in:
-        - module: salt-minion-reload-units
       - watch_in:
-        - module: salt-minion-reload-units
+        - module: salt-common-reload-units
 {%- endfor %}
 
 salt-minion-cache-clear-timer:
@@ -33,9 +31,7 @@ salt-minion-cache-clear-timer:
       - name:   salt-minion-cache-clear.timer
       - enable: {{ saltdata.minion.cachecleaner.enabled|yaml }}
       - require:
-        - module: salt-minion-reload-units
-        - file:   salt-minion-cache-clear-service-unit
-        - file:   salt-minion-cache-clear-timer-unit
+        - module: salt-common-reload-units
       - watch:
         - file: salt-minion-cache-clear-service-unit
         - file: salt-minion-cache-clear-timer-unit
