@@ -188,6 +188,16 @@ salt-master-service-unit-dropin:
     - watch_in:
       - service: salt-master-service
 
+salt-master-logfile-conflict:
+  file.symlink:
+    - name:   /var/log/salt/master
+    - target: '../private/salt/master'
+    - force: yes
+    - require:
+      - pkg: salt-master-pkg
+    - require_in:
+      - service: salt-master-service
+
 salt-master-service:
   service.running:
     - name: salt-master
