@@ -1,5 +1,6 @@
+{%- from "salt/map.jinja" import saltdata %}
 [Timer]
-OnCalendar=weekly
+OnCalendar={{ saltdata.minion.cachecleaner.oncalendar }}
 
 [Install]
 WantedBy=multi-user.target
