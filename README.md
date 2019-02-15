@@ -3,3 +3,4 @@
 This repository provides [SaltStack Formulas](https://docs.saltstack.com/en/latest/topics/development/conventions/formulas.html) developed by [SSC-Services GmbH](https://ssc-services.de)
 
 - [MailHog](mailhog/README.md)
+- [SaltStack](salt/README.md)
