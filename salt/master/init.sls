@@ -181,7 +181,8 @@ salt-master-service-unit-dropin:
     - source:   salt://salt/files/salt-master.service.d_managed.conf.jinja
     - user:     {{ saltdata.master.user.name }}
     - group:    {{ saltdata.master.group.name }}
-    - mode:      0400
+    - mode:     0400
+    - makedirs: true
     - require_in:
       - service: salt-master-service
     - watch_in:
