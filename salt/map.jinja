@@ -131,22 +131,28 @@
 {%- set configmap = {
   'cloud': {
     'configuration': {
-      'cachedir': base_with_pillar.cloud.directories.cache ~ '/cloud',
-      'log_file': base_with_pillar.cloud.directories.log ~ '/cloud/cloud.log',
+      'data': {
+        'cachedir': base_with_pillar.cloud.directories.cache ~ '/cloud',
+        'log_file': base_with_pillar.cloud.directories.log ~ '/cloud/cloud.log',
+      }
     },
   },
   'master': {
     'configuration': {
-      'cachedir': base_with_pillar.master.directories.cache ~ '/master',
-      'log_file': base_with_pillar.master.directories.log ~ '/master/master.log',
-      'pki_dir':  base_with_pillar.master.directories.pki ~ '/master',
+      'data': {
+        'cachedir': base_with_pillar.master.directories.cache ~ '/master',
+        'log_file': base_with_pillar.master.directories.log ~ '/master/master.log',
+        'pki_dir':  base_with_pillar.master.directories.pki ~ '/master',
+      }
     },
   },
   'minion': {
     'configuration': {
-      'cachedir': base_with_pillar.minion.directories.cache ~ '/minion',
-      'log_file': base_with_pillar.minion.directories.log ~ '/minion.log',
-      'pki_dir':  base_with_pillar.minion.directories.pki ~ '/minion',
+      'data': {
+        'cachedir': base_with_pillar.minion.directories.cache ~ '/minion',
+        'log_file': base_with_pillar.minion.directories.log ~ '/minion.log',
+        'pki_dir':  base_with_pillar.minion.directories.pki ~ '/minion',
+      }
     },
   },
 } %}
