@@ -31,7 +31,7 @@ salt-master-configuration:
     - group:     {{ saltdata.master.group.name }}
     - mode:      0400
     - formatter: YAML
-    - dataset:   {{ saltdata.master.configuration|yaml }}
+    - dataset:   {{ saltdata.master.configuration.data|yaml }}
     - require:
       - file: salt-master-directory-configuration
     - watch_in:

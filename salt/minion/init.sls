@@ -45,7 +45,7 @@ salt-minion-configuration:
     - group:     {{ saltdata.minion.group.name }}
     - mode:      0500
     - formatter: YAML
-    - dataset:   {{ saltdata.minion.configuration|yaml }}
+    - dataset:   {{ saltdata.minion.configuration.data|yaml }}
     - require:
       - file: salt-minion-directory-configuration
     - watch_in:
