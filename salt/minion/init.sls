@@ -31,7 +31,7 @@ salt-minion-directory-{{ dir }}:
     - name:  {{ saltdata.minion.directories.get(dir) }}/minion
     - user:  {{ saltdata.minion.user.name }}
     - group: {{ saltdata.minion.group.name }}
-    - mode:  0770
+    - mode:  0700
     - force: true
     - require:
       - file: salt-common-directory-{{ dir }}
