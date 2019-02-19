@@ -4,7 +4,7 @@
 # automatically restarted once the cache-cleaner has finished its job
 salt-minion-service-override:
   file.{{ 'managed' if saltdata.minion.cachecleaner.enabled is sameas true else 'absent' }}:
-    - name: /etc/systemd/system/salt-minion.d/override.conf
+    - name: /etc/systemd/system/salt-minion.service.d/override.conf
     - makedirs: true
     - contents:
       - '[Service]'
