@@ -1,4 +1,7 @@
 {%- from "salt/map.jinja" import saltdata %}
+[Unit]
+Description=Trigger Restart of Salt Minion for Clearing its Cache
+
 [Timer]
 OnCalendar={{ saltdata.minion.cachecleaner.oncalendar }}
 
