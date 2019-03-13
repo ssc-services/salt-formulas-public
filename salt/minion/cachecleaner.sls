@@ -8,7 +8,8 @@ salt-minion-service-override:
     - makedirs: true
     - contents:
       - '[Service]'
-      - Restart=always
+      - ExecStopPost=/usr/bin/salt-call saltutil.clear_cache days={{ saltdata.minion.cachecleaner.days }}
+      - ExecStopPost=/usr/bin/salt-call saltutil.sync_all
     - watch_in:
       - service: salt-minion-service
 

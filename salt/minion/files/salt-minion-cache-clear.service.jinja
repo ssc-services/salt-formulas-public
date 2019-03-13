@@ -1,13 +1,12 @@
 {%- from "salt/map.jinja" import saltdata %}
 [Unit]
-Description=Clear the salt cache periodically
+Description=Restart Salt Minion to Clear its Cache
 Conflicts=salt-minion.service
 
 [Service]
 Type=oneshot
 User=root
-ExecStart=/usr/bin/salt-call saltutil.clear_cache days={{ saltdata.minion.cachecleaner.days }}
-ExecStart=/usr/bin/salt-call saltutil.sync_all
+ExecStart=/bin/systemctl --wait restart salt-minion
 Nice=0
 
 [Install]
