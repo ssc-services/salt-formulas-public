@@ -12,6 +12,7 @@ salt-minion-service-override:
       - ExecStopPost=/usr/bin/salt-call saltutil.sync_all
     - watch_in:
       - service: salt-minion-service
+      - module:  salt-common-reload-units
 
 {%- for type in ['service', 'timer'] %}
 salt-minion-cache-clear-{{ type }}-unit:
