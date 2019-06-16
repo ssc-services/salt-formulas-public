@@ -1,6 +1,8 @@
+{%- from "salt/map.jinja" import saltdata %}
+
 saltstack-deb-repo:
   pkgrepo.managed:
-    - name:       deb http://repo.saltstack.com/py3/{{ grains['os']|lower }}/{{ grains['osrelease'] }}/{{ grains['osarch'] }}/latest {{ grains['oscodename'] }} main
+    - name:       deb [ arch={{ grains['osarch'] }} ] http://repo.saltstack.com/py3/{{ grains['os']|lower }}/{{ grains['osrelease'] }}/{{ grains['osarch'] }}/latest {{ grains['oscodename'] }} main
     - humanname:  SaltStack APT/{{ grains['os'] }} Repository
     - dist:       {{ grains['oscodename'] }}
     - file:       /etc/apt/sources.list.d/saltstack.list
