@@ -5,10 +5,10 @@ include:
 
 salt-common-user:
   user.present:
-    - name:          {{ saltdata.common.user.name }}
-    - system:        true
-    - gid_from_name: true
-    - home:          {{ saltdata.common.directories.persistence }}
+    - name:   {{ saltdata.common.user.name }}
+    - system: true
+    - gid:    {{ saltdata.common.group.name }}
+    - home:   {{ saltdata.common.directories.persistence }}
 
 salt-common-group:
   group.present:
