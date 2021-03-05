@@ -120,6 +120,11 @@
 {%- set base_with_pillar = salt['grains.filter_by']({
   'base': base,
   'Debian': {
+    'common': {
+      'repository': {
+        'base_url': 'https://repo.saltstack.com/',
+      },
+    },
     'master': {
       'pkgs': {
         'dependencies': ['python3-pygit2', 'gnupg'],
