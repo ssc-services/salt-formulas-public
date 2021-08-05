@@ -3,9 +3,9 @@
 This SaltStack Formula for [SaltStack](https://github.com/saltstack/salt) allows to easily manage SaltStack components using SaltStack itself.
 
 It supports currently:
-- [Salt Master](https://docs.saltstack.com/en/latest/ref/configuration/master.html) via [`salt.master`](master/init.sls)
-- [Salt Minion](https://docs.saltstack.com/en/latest/ref/configuration/minion.html) via [`salt.minion`](minion/init.sls)
-- [Salt Cloud](https://docs.saltstack.com/en/latest/topics/cloud/) via [`salt.cloud`](cloud/init.sls)
+- [Salt Master](https://docs.saltproject.io/en/latest/ref/configuration/master.html) via [`salt.master`](master/init.sls)
+- [Salt Minion](https://docs.saltproject.io/en/latest/ref/configuration/minion.html) via [`salt.minion`](minion/init.sls)
+- [Salt Cloud](https://docs.saltproject.io/en/latest/topics/cloud/) via [`salt.cloud`](cloud/init.sls)
 
 ## Configuration
 
