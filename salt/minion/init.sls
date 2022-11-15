@@ -61,8 +61,9 @@ salt-minion-service:
       - file: salt-minion-directory-cache
       - file: salt-minion-directory-pki
     - watch:
-      - pkg:  salt-minion-pkg-dependencies
-      - pkg:  salt-minion-pkg
+      - pkg:    salt-minion-pkg-dependencies
+      - pkg:    salt-minion-pkg
+      - module: salt-common-reload-units
 
 salt-minion-unit-override:
 {%- if saltdata|traverse('minion:service:unitoptions', none) is mapping

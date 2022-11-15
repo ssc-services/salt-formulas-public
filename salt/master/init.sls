@@ -22,7 +22,9 @@ salt-master-directory-configuration:
     - group: {{ saltdata.master.group.name }}
     - mode:  0700
     - require:
-      - file: salt-common-directory-configuration
+      - file:  salt-common-directory-configuration
+      - user:  salt-common-user
+      - group: salt-common-group
 
 salt-master-configuration:
   file.serialize:
@@ -33,7 +35,9 @@ salt-master-configuration:
     - formatter: YAML
     - dataset:   {{ saltdata.master.configuration.data|yaml }}
     - require:
-      - file: salt-master-directory-configuration
+      - file:  salt-master-directory-configuration
+      - user:  salt-common-user
+      - group: salt-common-group
     - watch_in:
       - service: salt-master-service
 
@@ -45,7 +49,9 @@ salt-master-directory-{{ keytype }}keys:
     - group: {{ saltdata.master.group.name }}
     - mode:  0700
     - require:
-      - file: salt-common-directory-configuration
+      - file:  salt-common-directory-configuration
+      - user:  salt-common-user
+      - group: salt-common-group
     - watch_in:
       - service: salt-master
 
@@ -59,7 +65,9 @@ salt-master-keys-{{ keytype }}-key-{{ key }}:
     - contents: |
         {{ value }}
     - require:
-      - file: salt-master-directory-{{ keytype }}keys
+      - file:  salt-master-directory-{{ keytype }}keys
+      - user:  salt-common-user
+      - group: salt-common-group
     - watch_in:
       - service: salt-master-service
   {%- endfor %}
@@ -73,7 +81,9 @@ salt-master-gpg-agent-configuration:
     - mode:     0400
     - contents: "pinentry-program {{ saltdata.master.gpg.pinentry_program }}"
     - require:
-      - file: salt-master-directory-gpgkeys
+      - file:  salt-master-directory-gpgkeys
+      - user:  salt-common-user
+      - group: salt-common-group
 
 # Using base64 dumps for this is quite ugly, there must be better ways to manage GPG keys in Salt, but:
 # - states.gpg: can fetch keys only from a keyserver
@@ -103,7 +113,9 @@ salt-master-gpg-data-{{ file }}:
     - onchanges:
       - file: salt-master-gpg-data-{{ file }}-saltsrc
     - require:
-      - file: salt-master-gpg-data-{{ file }}-saltsrc
+      - file:  salt-master-gpg-data-{{ file }}-saltsrc
+      - user:  salt-common-user
+      - group: salt-common-group
     - watch_in:
       - service: salt-master-service
   {%- endfor %}
