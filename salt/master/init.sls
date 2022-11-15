@@ -126,8 +126,8 @@ salt-master-service-unit-dropin:
     - name: /etc/systemd/system/salt-master.service.d/managed.conf
     - template: jinja
     - source:   salt://salt/files/salt-master.service.d_managed.conf.jinja
-    - user:     {{ saltdata.master.user.name }}
-    - group:    {{ saltdata.master.group.name }}
+    - user:     root
+    - group:    root
     - mode:     0400
     - makedirs: true
     - watch_in:
