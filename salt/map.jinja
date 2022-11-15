@@ -160,6 +160,9 @@
         'pki_dir':  base_with_pillar.minion.directories.pki ~ '/minion',
       }
     },
+    'service': {
+      'unitoptions': {},
+    },
   },
 } %}
 
@@ -167,3 +170,14 @@
 {%- set saltdata = salt['grains.filter_by']({
   'base': base_with_pillar
 }, base='base', merge=configmap) %}
+
+{# set required unit options when cachecleaner is enabled #}
+{%- if saltdata.minion.cachecleaner.enabled is sameas true %}
+  {%- set ccoptions = {
+    'Service': [
+      {'ExecStopPost': '/usr/bin/salt-call saltutil.clear_cache days=' ~ saltdata.minion.cachecleaner.days},
+      {'ExecStopPost': '/usr/bin/salt-call saltutil.sync_all'},
+    ]
+  } %}
+  {%- do salt['defaults.merge'](saltdata.minion.service.unitoptions, ccoptions, merge_lists=true) %}
+{%- endif %}

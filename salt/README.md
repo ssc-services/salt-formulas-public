@@ -21,6 +21,23 @@ salt:
         ipv6: true
 ```
 
+### Configuring the systemd unit
+
+To pass custom options to the `salt-minion` service unit, use Pillars following the example below:
+
+```yaml
+salt:
+  minion:
+    service:
+      unitoptions:
+        Service:
+          - SystemCallFilter: @io
+          - Environment: CUSTOM_ENV_VAR=somevalue
+          - Environment: ANOTHER_ENV_VAR=anothervalue
+        Unit:
+          - Documentation: https://docserver.int/salt/minion
+```
+
 ## Compatibility
 
 **Requirements:**

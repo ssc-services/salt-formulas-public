@@ -63,3 +63,28 @@ salt-minion-service:
     - watch:
       - pkg:  salt-minion-pkg-dependencies
       - pkg:  salt-minion-pkg
+
+salt-minion-unit-override:
+{%- if saltdata|traverse('minion:service:unitoptions', none) is mapping
+    and saltdata.minion.service.unitoptions.keys()|length > 0 %}
+  file.managed:
+    - name:     /etc/systemd/system/{{ saltdata.minion.service.name }}.service.d/override.conf
+    - user:     root
+    - group:    root
+    - mode:     0444
+    - makedirs: true
+    - contents: |
+  {%- for section, sectiondata in saltdata.minion.service.unitoptions.items() %}
+        [{{ section }}]
+    {%- for option in sectiondata %}
+      {%- for key, value in option.items() %}
+        {{ key ~ "=" ~ value }}
+      {%- endfor %}
+    {%- endfor %}
+  {%- endfor %}
+{%- else %}
+  file.absent:
+    - name:  /etc/systemd/system/{{ saltdata.minion.service.name }}.service.d/override.conf
+{%- endif %}
+    - watch_in:
+      - module:  salt-common-reload-units
