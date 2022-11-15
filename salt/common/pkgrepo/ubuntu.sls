@@ -9,7 +9,7 @@
 saltstack-deb-repo-key:
   file.managed:
     - name:        {{ keyfile }}
-    - source:      "{{ saltdata.common.repository.base_url.rstrip('/') }}/py3/{{ grains['os']|lower }}/{{ grains['osrelease'] }}/{{ grains['osarch'] }}/{{ saltdata.common.version }}/salt-archive-keyring.gpg"
+    - source:      "{{ saltdata.common.repository.base_url.rstrip('/') }}/salt/py3/{{ grains['os']|lower }}/{{ grains['osrelease'] }}/{{ grains['osarch'] }}/{{ saltdata.common.version }}/salt-archive-keyring.gpg"
     - skip_verify: true
     - user:        root
     - group:       root
@@ -23,7 +23,7 @@ saltstack-deb-repo-file:
     - group:    root
     - mode:     0644
     - makedirs: true
-    - contents: "deb [ arch={{ grains['osarch'] }} signed-by={{ keyfile }} ] {{ saltdata.common.repository.base_url.rstrip('/') }}/py3/{{ grains['os']|lower }}/{{ grains['osrelease'] }}/{{ grains['osarch'] }}/{{ saltdata.common.version }} {{ grains['oscodename'] }} main"
+    - contents: "deb [ arch={{ grains['osarch'] }} signed-by={{ keyfile }} ] {{ saltdata.common.repository.base_url.rstrip('/') }}/salt/py3/{{ grains['os']|lower }}/{{ grains['osrelease'] }}/{{ grains['osarch'] }}/{{ saltdata.common.version }} {{ grains['oscodename'] }} main"
 
 saltstack-deb-repo-refresh:
   module.run:

@@ -25,10 +25,10 @@ salt:
 
 **Requirements:**
 - **OS:**      Linux
-- **systemd:** `>=232`
+- **systemd:** `>=249`
 
 **Developed/tested with:**
-- **OS:** Ubuntu 18.04/bionic; SLES15-SP2
-- **SaltStack:** `2018.3.3`; `3002.2`
-- **Python:** `3.6.5`; `3.6.13`
-- **Jinja2:** `2.10`
+- **OS:** Ubuntu 22.04/jammy; SLES15-SP2
+- **SaltStack:** `2018.3.3`; `3002.2`; `3005.1`
+- **Python:** `3.6.5`; `3.6.13`, `3.9.15`
+- **Jinja2:** `3.1.0`
