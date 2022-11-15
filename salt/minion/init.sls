@@ -28,11 +28,12 @@ salt-minion-directory-configuration:
 {%- for dir in ['cache', 'persistence', 'pki'] %}
 salt-minion-directory-{{ dir }}:
   file.directory:
-    - name:  {{ saltdata.minion.directories.get(dir) }}/minion
-    - user:  {{ saltdata.minion.user.name }}
-    - group: {{ saltdata.minion.group.name }}
-    - mode:  0700
-    - force: true
+    - name:     {{ saltdata.minion.directories.get(dir) }}/minion
+    - user:     {{ saltdata.minion.user.name }}
+    - group:    {{ saltdata.minion.group.name }}
+    - mode:     0700
+    - makedirs: true
+    - force:    true
     - require:
       - file: salt-common-directory-{{ dir }}
 {%- endfor %}
