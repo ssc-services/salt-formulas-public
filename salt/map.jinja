@@ -56,7 +56,6 @@
     'cachecleaner': {
       'enabled':    false,
       'oncalendar': 'weekly',
-      'days':       7,
     },
   },
   'master': {
@@ -175,7 +174,7 @@
 {%- if saltdata.minion.cachecleaner.enabled is sameas true %}
   {%- set ccoptions = {
     'Service': [
-      {'ExecStopPost': '/usr/bin/salt-call saltutil.clear_cache days=' ~ saltdata.minion.cachecleaner.days},
+      {'ExecStopPost': '/usr/bin/salt-call saltutil.clear_cache'},
       {'ExecStopPost': '/usr/bin/salt-call saltutil.sync_all'},
     ]
   } %}
